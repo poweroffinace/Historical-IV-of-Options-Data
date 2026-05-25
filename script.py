@@ -10,12 +10,18 @@ app_secret = "a40916e5-6935-4328-adf2-27e333ec3f9a"
 # Step 1: Generate Consent and Open Browser for Login
 # consent_id = dhan_login.generate_login_session(app_id, app_secret)
 
-token_id = '85243ec5-e6f7-48eb-8887-572e05c9e2f1'
+token_id = 'c48cd8c1-1042-4293-aa06-39c6e943cc58'
 dhan_creds = dhan_login.consume_token_id(token_id, app_id, app_secret)
-
 
 client_id    = dhan_creds.get('dhanClientId')
 access_token = dhan_creds.get('accessToken')
+
+
+dhan_login = DhanLogin(dhan_creds.get('dhanClientId'))
+user_info = dhan_login.user_profile(dhan_creds.get('accessToken'))
+print(user_info)
+input('Press ENTER to continue')
+
 tsl          = Tradehull(client_id, access_token)
 
 print("Login success")
@@ -68,8 +74,11 @@ for name in watchlist:
             data      = tsl.get_expired_option_data(tradingsymbol=name,exchange="NSE",interval=1,expiry_flag="MONTH",expiry_code=1,strike="ATM",option_type="CALL",from_date=from_date,to_date=expiry)
             if len(data) > 0 : 
                 data.to_csv(f"{path}", index=False)
-            print(f"{name} {expiry} : Download completed")
-
+                print(f"{name} {expiry} : Download completed")
+            else:
+                # print(f"{name} {expiry} : Download failed")
+                dummy =5 
+                
         except Exception as e:
             print(f"{name} {expiry} : Error {e}")
             continue
